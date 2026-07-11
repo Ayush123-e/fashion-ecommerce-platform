@@ -285,18 +285,21 @@ const Products = () => {
                           }
                           toggleWishlist(product.id);
                         }}
-                        className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 hover:bg-white text-stone-600 hover:text-red-500 transition-all duration-300 shadow-sm z-10"
+                        className="absolute top-2 right-2 p-1.5 transition-all duration-300 z-10 drop-shadow"
                         aria-label={isInWishlist(product.id) ? "Remove from wishlist" : "Add to wishlist"}
                       >
                         <svg
-                          className={`w-4.5 h-4.5 transition-transform duration-300 active:scale-125 ${
-                            isInWishlist(product.id) ? 'fill-red-500 text-red-500' : 'text-stone-600'
+                          className={`w-6 h-6 transition-all duration-300 active:scale-125 ${
+                            isInWishlist(product.id)
+                              ? 'text-pink-500 fill-pink-500 scale-110'
+                              : 'text-white fill-white/70 hover:text-pink-400 hover:fill-pink-400'
                           }`}
-                          fill={isInWishlist(product.id) ? 'currentColor' : 'none'}
-                          stroke="currentColor"
+                          stroke={isInWishlist(product.id) ? '#ec4899' : 'currentColor'}
+                          strokeWidth="1.5"
                           viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
                         </svg>
                       </button>
 
