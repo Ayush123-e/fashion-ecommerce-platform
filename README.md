@@ -23,58 +23,36 @@ Ensure the following tools are installed on your local development machine:
 
 ## 🚀 Step-by-Step Local Setup
 
-Follow these instructions to clone, configure, migrate, and run the project locally.
+Follow these instructions to clone and run the project locally. (The database is already hosted and seeded on Supabase).
 
 ### 1. Configure Backend Environment Variables
-Create a `.env` file in the `backend/` directory:
+We have provided an example environment file that connects to a live test database.
+Navigate to the `backend/` directory and rename `.env.example` to `.env`:
 ```bash
 # Navigate to backend directory
 cd backend
 
-# Create .env file
-touch .env
+# Rename the example env file
+mv .env.example .env
 ```
-Add the following configuration parameters inside `backend/.env`:
-```env
-PORT=5005
-DATABASE_URL="postgresql://<username>:<password>@localhost:5432/<db_name>?schema=public"
-JWT_SECRET="aura_super_secure_jwt_secret_key_2026"
-NODE_ENV="development"
-```
-*(Replace `<username>`, `<password>`, and `<db_name>` with your local PostgreSQL server database credentials)*
 
 ### 2. Install Project Dependencies
 Install dependencies for both the frontend and backend workspaces:
 ```bash
-# In the project root, install backend dependencies
-cd backend
+# In the backend directory, install backend dependencies
 npm install
 
-# Return to root, then install frontend dependencies
+# Navigate to frontend, then install frontend dependencies
 cd ../frontend
 npm install
 ```
 
-### 3. Run Database Migrations
-Generate the Prisma Client and execute migrations to set up the PostgreSQL tables:
-```bash
-cd ../backend
-npx prisma generate
-npx prisma migrate dev --name init
-```
-
-### 4. Execute the Seed Script
-Populate the database with default categories, realistic fashion items, and pre-configured accounts:
-```bash
-npx prisma db seed
-```
-
-### 5. Start Development Servers
+### 3. Start Development Servers
 Spin up the local backend server and Vite frontend server:
 
 **Start Backend API** (running on `http://localhost:5005`):
 ```bash
-cd backend
+cd ../backend
 npm run dev
 ```
 
