@@ -3,10 +3,23 @@ import prisma from '../lib/db.js';
 // @desc    Get all products with filters
 // @route   GET /api/products
 // @access  Public
+// Simple in-memory cache for products to speed up response
+const cache = new Map();
+const CACHE_TTL = 60 * 1000; // 1 minute
+
 export const getProducts = async (req, res) => {
   const { search, category, minPrice, maxPrice, size, sortBy, sort, page, limit } = req.query;
 
   try {
+    // Generate a unique cache key based on query params
+    const cacheKey = JSON.stringify(req.query || {});
+    const cachedData = cache.get(cacheKey);
+    
+    // Return cached data if valid
+    if (cachedData && Date.now() - cachedData.timestamp < CACHE_TTL) {
+      return res.status(200).json(cachedData.data);
+    }
+
     const where = {};
 
     // Apply search filter (name or description)
@@ -79,13 +92,17 @@ export const getProducts = async (req, res) => {
         prisma.product.count({ where })
       ]);
 
-      return res.status(200).json({
+      const result = {
         products,
         totalCount,
         totalPages: Math.ceil(totalCount / limitNum),
         currentPage: pageNum,
         limit: limitNum
-      });
+      };
+      
+      // Save to cache
+      cache.set(cacheKey, { data: result, timestamp: Date.now() });
+      return res.status(200).json(result);
     }
 
     // Unpaginated raw array callback fallback (maintains compatibility with other views)
@@ -99,10 +116,12 @@ export const getProducts = async (req, res) => {
       }
     });
 
+    // Save to cache
+    cache.set(cacheKey, { data: products, timestamp: Date.now() });
     return res.status(200).json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
-    return res.status(500).json({ message: 'Internal server error while fetching products' });
+    return res.status(500).json({ message: 'Internal server error while fetching products', error: error.message });
   }
 };
 

@@ -38,9 +38,17 @@ export const CartProvider = ({ children }) => {
   const addToCart = async (productId, quantity = 1) => {
     try {
       setError(null);
-      await axios.post(API_URL, { productId, quantity });
-      // Refetch full cart data to populate relational model fields correctly
-      await fetchCart();
+      const response = await axios.post(API_URL, { productId, quantity });
+      
+      // Update local state instead of refetching the entire cart
+      setCart(prevCart => {
+        const existing = prevCart.find(item => item.productId === productId);
+        if (existing) {
+          return prevCart.map(item => item.productId === productId ? response.data : item);
+        }
+        return [...prevCart, response.data];
+      });
+      
       return { success: true };
     } catch (err) {
       console.error('Error adding to cart:', err);
@@ -51,39 +59,45 @@ export const CartProvider = ({ children }) => {
   };
 
   const updateQuantity = async (productId, quantity) => {
+    const previousCart = [...cart];
+    
+    // Optimistic update
+    setCart(prevCart => 
+      prevCart.map(item => 
+        item.productId === productId ? { ...item, quantity } : item
+      )
+    );
+    
     try {
       setError(null);
       await axios.put(`${API_URL}/${productId}`, { quantity });
-      
-      // Update local state dynamically for speed
-      setCart(prevCart => 
-        prevCart.map(item => 
-          item.productId === productId ? { ...item, quantity } : item
-        )
-      );
       return { success: true };
     } catch (err) {
       console.error('Error updating quantity:', err);
+      // Revert on error
+      setCart(previousCart);
       const msg = err.response?.data?.message || 'Could not update quantity';
       setError(msg);
-      await fetchCart(); // refetch on error
       return { success: false, error: msg };
     }
   };
 
   const removeFromCart = async (productId) => {
+    const previousCart = [...cart];
+    
+    // Optimistic update
+    setCart(prevCart => prevCart.filter(item => item.productId !== productId));
+    
     try {
       setError(null);
       await axios.delete(`${API_URL}/${productId}`);
-      
-      // Update local state dynamically
-      setCart(prevCart => prevCart.filter(item => item.productId !== productId));
       return { success: true };
     } catch (err) {
       console.error('Error removing from cart:', err);
+      // Revert on error
+      setCart(previousCart);
       const msg = err.response?.data?.message || 'Could not remove item from cart';
       setError(msg);
-      await fetchCart();
       return { success: false, error: msg };
     }
   };

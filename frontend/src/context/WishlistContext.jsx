@@ -37,13 +37,21 @@ export const WishlistProvider = ({ children }) => {
 
   const addToWishlist = async (productId) => {
     if (!user) return { success: false, error: 'Please log in to add items to your wishlist' };
+    
+    // Optimistic update
+    const optimisticItem = { productId, userId: user.id, id: 'temp-' + Date.now() };
+    setWishlist((prev) => [optimisticItem, ...prev]);
+    
     try {
       setError(null);
       const response = await axios.post(API_URL, { productId });
-      setWishlist((prev) => [response.data, ...prev]);
+      // Replace optimistic item with actual from server
+      setWishlist((prev) => prev.map(item => item.id === optimisticItem.id ? response.data : item));
       return { success: true };
     } catch (err) {
       console.error('Error adding to wishlist:', err);
+      // Revert optimistic update
+      setWishlist((prev) => prev.filter(item => item.id !== optimisticItem.id));
       const msg = err.response?.data?.message || 'Could not add item to wishlist';
       setError(msg);
       return { success: false, error: msg };
@@ -52,16 +60,21 @@ export const WishlistProvider = ({ children }) => {
 
   const removeFromWishlist = async (productId) => {
     if (!user) return { success: false };
+    
+    // Optimistic update
+    const previousWishlist = [...wishlist];
+    setWishlist((prev) => prev.filter((item) => item.productId !== productId));
+    
     try {
       setError(null);
       await axios.delete(`${API_URL}/${productId}`);
-      setWishlist((prev) => prev.filter((item) => item.productId !== productId));
       return { success: true };
     } catch (err) {
       console.error('Error removing from wishlist:', err);
+      // Revert optimistic update
+      setWishlist(previousWishlist);
       const msg = err.response?.data?.message || 'Could not remove item from wishlist';
       setError(msg);
-      await fetchWishlist(); // refresh state
       return { success: false, error: msg };
     }
   };
