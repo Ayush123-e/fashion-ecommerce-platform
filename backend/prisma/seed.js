@@ -158,7 +158,7 @@ const accessoriesProducts = [
     name: "Vegetable-Tanned Leather Belt",
     description: "Constructed from 4mm thick full-grain vegetable-tanned harness leather with solid brass buckle.",
     price: 75.00,
-    images: ["https://images.unsplash.com/photo-1624222247344-550fb8ecf60d?w=800&auto=format&fit=crop&q=80"],
+    images: ["https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&auto=format&fit=crop&q=80"],
   },
   {
     name: "Organic Cotton Ribbed Beanie",
@@ -176,7 +176,7 @@ const accessoriesProducts = [
     name: "Minimal Leather Cardholder",
     description: "Ultra-slim card wallet made from premium Horween leather, featuring four card slots.",
     price: 45.00,
-    images: ["https://images.unsplash.com/photo-1627124118123-e4d3db73929f?w=800&auto=format&fit=crop&q=80"],
+    images: ["https://images.unsplash.com/photo-1588449668365-d15e397f6787?w=800&auto=format&fit=crop&q=80"],
   },
   {
     name: "Wool Felt Fedora Hat",

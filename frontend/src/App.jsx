@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { CartProvider, useCart } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 import Navbar from './components/Navbar';
+import ProductImage from './components/ProductImage';
 import Wishlist from './pages/Wishlist';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
@@ -192,8 +193,8 @@ const Home = () => {
               >
                 {/* Image */}
                 <Link to={`/products/${product.id}`} className="relative aspect-[3/4] overflow-hidden bg-stone-100 block">
-                  <img 
-                    src={product.images?.[0] || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80'} 
+                  <ProductImage 
+                    src={product.images?.[0]} 
                     alt={product.name} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />

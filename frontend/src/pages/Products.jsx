@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import FilterSidebar from '../components/FilterSidebar';
 import { useWishlist } from '../context/WishlistContext';
+import ProductImage from '../components/ProductImage';
 
 const API_BASE_URL = 'http://localhost:5005/api';
 
@@ -267,8 +268,8 @@ const Products = () => {
                   >
                     {/* Product Image */}
                     <Link to={`/products/${product.id}`} className="relative aspect-[3/4] overflow-hidden bg-stone-100 block">
-                      <img
-                        src={product.images?.[0] || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80'}
+                      <ProductImage
+                        src={product.images?.[0]}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />

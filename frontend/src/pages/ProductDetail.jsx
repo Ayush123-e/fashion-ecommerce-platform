@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import ProductImage from '../components/ProductImage';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -103,8 +104,8 @@ const ProductDetail = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
         {/* Left Column: Product Image */}
         <div className="rounded-2xl overflow-hidden border border-stone-200 shadow-sm bg-stone-50 aspect-[3/4]">
-          <img 
-            src={product.images?.[0] || 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800&auto=format&fit=crop&q=80'} 
+          <ProductImage 
+            src={product.images?.[0]} 
             alt={product.name} 
             className="w-full h-full object-cover"
           />
